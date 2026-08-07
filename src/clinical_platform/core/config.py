@@ -19,6 +19,23 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 30
 
+    # ------------------------------------------------------------------
+    # Phase 3 — Retrieval & Embeddings
+    # ------------------------------------------------------------------
+
+    # Directory scanned by IngestPipeline (relative paths resolved from cwd)
+    docs_dir: str = "data/sample_documents"
+
+    # Path to the local JSON vector store file
+    vector_store_path: str = "data/vector_store.json"
+
+    # AWS Bedrock settings
+    bedrock_region: str = "us-east-1"
+    embedding_model_id: str = "amazon.titan-embed-text-v1"
+
+    # Expected output dimension of the embedding model
+    embedding_dimension: int = 1536
+
 
 @lru_cache
 def get_settings() -> Settings:

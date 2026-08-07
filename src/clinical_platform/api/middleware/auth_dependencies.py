@@ -1,7 +1,7 @@
 """FastAPI dependencies for authentication and permission checking."""
 
-from typing import Annotated
 from collections.abc import Callable
+from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
