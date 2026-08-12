@@ -20,7 +20,7 @@ class FakeEmbedder:
     the text) so tests can distinguish them if needed.
     """
 
-    def __init__(self, dimension: int = 1536) -> None:
+    def __init__(self, dimension: int = 1024) -> None:
         self._dim = dimension
 
     def embed(self, text: str) -> list[float]:
@@ -68,9 +68,9 @@ def _make_chunk(
 
 
 def test_embed_returns_correct_length() -> None:
-    embedder = FakeEmbedder(dimension=1536)
+    embedder = FakeEmbedder(dimension=1024)
     result = embedder.embed("hello world")
-    assert len(result) == 1536
+    assert len(result) == 1024
 
 
 def test_embed_returns_floats() -> None:

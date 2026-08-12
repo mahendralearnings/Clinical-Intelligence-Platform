@@ -95,3 +95,34 @@ class VectorStore(Protocol):
     def count(self) -> int:
         """Return the total number of stored chunks."""
         ...  # pragma: no cover
+
+
+# ---------------------------------------------------------------------------
+# LLMProvider protocol  (Phase 4)
+# ---------------------------------------------------------------------------
+
+
+class LLMError(Exception):
+    """Raised when an LLM provider fails to generate a response.
+
+    Infrastructure adapters catch boto3/HTTP exceptions and re-raise as
+    LLMError so service code never has to import infrastructure packages.
+    """
+
+
+@runtime_checkable
+class LLMProvider(Protocol):
+    """Generate a text response from a plain-string prompt.
+
+    Implementations: BedrockLLMProvider (infra), FakeLLMProvider (tests).
+
+    Piece 3 will extend this with system_prompt, max_tokens, and streaming.
+    """
+
+    def generate(self, prompt: str) -> str:
+        """Return a text response for *prompt*.
+
+        Raises:
+            LLMError: if the underlying model call fails for any reason.
+        """
+        ...  # pragma: no cover

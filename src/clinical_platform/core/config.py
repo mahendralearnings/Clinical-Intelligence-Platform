@@ -31,10 +31,11 @@ class Settings(BaseSettings):
 
     # AWS Bedrock settings
     bedrock_region: str = "us-east-1"
-    embedding_model_id: str = "amazon.titan-embed-text-v1"
+    embedding_model_id: str = "cohere.embed-english-v3"
 
     # Expected output dimension of the embedding model
-    embedding_dimension: int = 1536
+    # Cohere Embed English v3 produces 1024-d vectors
+    embedding_dimension: int = 1024
 
 
 @lru_cache
