@@ -7,6 +7,7 @@ Run with:
 from fastapi import FastAPI
 
 from clinical_platform.api.routes import auth as auth_router
+from clinical_platform.api.routes import rag as rag_router
 from clinical_platform.api.routes import retrieval as retrieval_router
 
 app = FastAPI(
@@ -21,6 +22,7 @@ app = FastAPI(
 
 app.include_router(auth_router.router)
 app.include_router(retrieval_router.router)
+app.include_router(rag_router.router)
 
 
 # ---------------------------------------------------------------------------

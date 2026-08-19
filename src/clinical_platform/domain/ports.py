@@ -76,13 +76,15 @@ class VectorStore(Protocol):
         ...  # pragma: no cover
 
     def search(
-        self, query_vector: list[float], top_k: int
+        self, query_vector: list[float], top_k: int, min_score: float = 0.0
     ) -> list[tuple[DocumentChunk, float]]:
         """Return the *top_k* most similar chunks ranked by cosine similarity.
 
         Args:
             query_vector: Embedding of the search question.
-            top_k: Maximum number of results to return.
+            top_k:        Maximum number of results to return.
+            min_score:    Minimum cosine similarity threshold (default 0.0 —
+                          no filter). RagQueryService passes 0.5.
 
         Returns:
             List of (DocumentChunk, score) tuples, highest score first.
@@ -119,8 +121,22 @@ class LLMProvider(Protocol):
     Piece 3 will extend this with system_prompt, max_tokens, and streaming.
     """
 
-    def generate(self, prompt: str) -> str:
+    def generate(
+        self,
+        prompt: str,
+        *,
+        system_prompt: str | None = None,
+        max_tokens: int = 512,
+        temperature: float = 0.0,
+    ) -> str:
         """Return a text response for *prompt*.
+
+        Args:
+            prompt:        User message to send to the model.
+            system_prompt: Optional system-level instruction (e.g. "You are a
+                           clinical assistant."). Passed as the ``system``
+                           field in Bedrock's converse() API.
+            max_tokens:    Maximum tokens in the response (default 512).
 
         Raises:
             LLMError: if the underlying model call fails for any reason.

@@ -37,7 +37,27 @@ class Settings(BaseSettings):
     # Cohere Embed English v3 produces 1024-d vectors
     embedding_dimension: int = 1024
 
+    # ------------------------------------------------------------------
+    # Phase 4 — LLM Gateway
+    # ------------------------------------------------------------------
 
+    # Claude model ID for text generation
+    # Kept separate from embedding_model_id — they are independent models
+    llm_model_id: str = "anthropic.claude-3-haiku-20240307-v1:0"
+    
+
+    # AWS region for LLM calls — may differ from bedrock_region (embeddings)
+    llm_region: str = "us-east-1"
+
+    # ------------------------------------------------------------------
+    # Phase 5 — RAG Query Service
+    # ------------------------------------------------------------------
+
+    # Path to the JSONL query log file (one line per query)
+    query_log_path: str = "data/query_log.jsonl"
+    llm_provider_type: str = "bedrock"
+    anthropic_api_key: str = ""
+    openai_api_key: str = ""
 @lru_cache
 def get_settings() -> Settings:
     return Settings()

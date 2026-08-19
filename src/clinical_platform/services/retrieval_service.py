@@ -49,23 +49,27 @@ class RetrievalService:
     # ------------------------------------------------------------------
 
     def search(
-        self, query: str, top_k: int = 3
+        self,
+        query: str,
+        top_k: int = 3,
+        min_score: float = 0.0,
     ) -> list[tuple[DocumentChunk, float]]:
         """Embed *query* and return the top-K most similar stored chunks.
 
         Args:
-            query:  Natural-language question from the caller.
-            top_k:  Maximum number of results to return (default 3).
+            query:     Natural-language question from the caller.
+            top_k:     Maximum number of results to return (default 3).
+            min_score: Minimum cosine similarity. Chunks below this score are
+                       excluded. Default 0.0 (no filter). RagQueryService
+                       passes 0.5 to avoid irrelevant chunks reaching the LLM.
 
         Returns:
             List of (DocumentChunk, cosine_similarity_score) tuples,
             ordered highest score first.
 
         Raises:
-            DimensionMismatchError: propagated from the VectorStore if the
-                query vector dimension does not match stored vectors.
-            EmbeddingError: propagated from the EmbeddingProvider if the
-                model call fails.
+            DimensionMismatchError: propagated from the VectorStore.
+            EmbeddingError: propagated from the EmbeddingProvider.
         """
         query_vector = self._embedder.embed(query)
-        return self._store.search(query_vector, top_k)
+        return self._store.search(query_vector, top_k, min_score)

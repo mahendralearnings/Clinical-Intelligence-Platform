@@ -131,9 +131,18 @@ class JsonVectorStore:
         return len(records)
 
     def search(
-        self, query_vector: list[float], top_k: int
+        self,
+        query_vector: list[float],
+        top_k: int,
+        min_score: float = 0.0,
     ) -> list[tuple[DocumentChunk, float]]:
         """Return the top-K chunks most similar to *query_vector*.
+
+        Args:
+            query_vector: Embedding of the search question.
+            top_k:        Maximum number of results to return.
+            min_score:    Minimum cosine similarity threshold. Chunks scoring
+                          below this value are excluded. Default 0.0 (no filter).
 
         Raises:
             DimensionMismatchError: if query dimension != stored dimension.
@@ -159,7 +168,9 @@ class JsonVectorStore:
         ]
 
         scored.sort(key=lambda x: x[1], reverse=True)
-        return scored[:top_k]
+        # Apply min_score filter after sorting so top_k counts only passing chunks
+        filtered = [(chunk, score) for chunk, score in scored if score >= min_score]
+        return filtered[:top_k]
 
     def count(self) -> int:
         """Return the total number of stored chunks."""
