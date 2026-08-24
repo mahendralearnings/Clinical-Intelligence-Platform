@@ -15,7 +15,18 @@ from langgraph.prebuilt import ToolNode
 from typing_extensions import Annotated, TypedDict
 
 from clinical_platform.agents.tools.clinical_tools import calculate, search_clinical_documents
+from langchain_core.messages import SystemMessage
 
+SYSTEM_PROMPT = (
+    "You are a clinical intelligence assistant. For ANY question about "
+    "drug dosages, clinical trials, or SOPs, you MUST use the "
+    "search_clinical_documents tool FIRST to find the answer in the "
+    "actual document library - never answer from your own general "
+    "knowledge, since the documents are the only authoritative source "
+    "here and may differ from general knowledge. Only use the calculate "
+    "tool for arithmetic, and only after you have the necessary numbers "
+    "from a search result or from the user's question."
+)
 
 class AgentState(TypedDict):
     """The 'memory' carried through every step of the loop."""
@@ -26,11 +37,17 @@ class AgentState(TypedDict):
 TOOLS = [search_clinical_documents, calculate]
 
 
+# def agent_node(state: AgentState, llm_with_tools) -> dict:
+#     """Ask the LLM: given everything so far, what do you want to do next?"""
+#     response = llm_with_tools.invoke(state["messages"])
+#     return {"messages": [response]}
 def agent_node(state: AgentState, llm_with_tools) -> dict:
     """Ask the LLM: given everything so far, what do you want to do next?"""
-    response = llm_with_tools.invoke(state["messages"])
+    messages = state["messages"]
+    if not messages or not isinstance(messages[0], SystemMessage):
+        messages = [SystemMessage(content=SYSTEM_PROMPT), *messages]
+    response = llm_with_tools.invoke(messages)
     return {"messages": [response]}
-
 
 def should_continue(state: AgentState) -> str:
     """After the agent speaks: did it ask for a tool, or is it done?"""
