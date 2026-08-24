@@ -1,0 +1,58 @@
+[
+  {
+    "id": "sop-01",
+    "question": "How soon must an Investigator notify the Sponsor's Pharmacovigilance department after first knowledge of a serious adverse event?",
+    "expected_source": "sop_adverse_event_reporting.md",
+    "expected_keywords": ["24 hours"],
+    "is_answerable": true
+  },
+  {
+    "id": "sop-02",
+    "question": "How many calendar days does the Sponsor have to submit an expedited FDA report for a serious, unexpected, related adverse event that is fatal?",
+    "expected_source": "sop_adverse_event_reporting.md",
+    "expected_keywords": ["7 calendar days"],
+    "is_answerable": true
+  },
+  {
+    "id": "drug-01",
+    "question": "What is the maximum daily dose of immediate release metformin for adults?",
+    "expected_source": "drug_manual_metformin.md",
+    "expected_keywords": ["2550"],
+    "is_answerable": true
+  },
+  {
+    "id": "drug-02",
+    "question": "What vitamin deficiency is associated with long-term metformin use?",
+    "expected_source": "drug_manual_metformin.md",
+    "expected_keywords": ["B12", "vitamin B12"],
+    "is_answerable": true
+  },
+  {
+    "id": "trial-01",
+    "question": "What was the ACR20 response rate for the 200mg dose of CIP-204X at Week 12?",
+    "expected_source": "clinical_trial_summary_204.md",
+    "expected_keywords": ["68.4"],
+    "is_answerable": true
+  },
+  {
+    "id": "trial-02",
+    "question": "How many patients were enrolled in the CIP-204 trial?",
+    "expected_source": "clinical_trial_summary_204.md",
+    "expected_keywords": ["642"],
+    "is_answerable": true
+  },
+  {
+    "id": "unanswerable-01",
+    "question": "What is the recommended pediatric dosage of ibuprofen?",
+    "expected_source": null,
+    "expected_keywords": [],
+    "is_answerable": false
+  },
+  {
+    "id": "unanswerable-02",
+    "question": "What is the capital of Japan?",
+    "expected_source": null,
+    "expected_keywords": [],
+    "is_answerable": false
+  }
+]

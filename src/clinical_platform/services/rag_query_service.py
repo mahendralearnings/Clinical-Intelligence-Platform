@@ -20,6 +20,10 @@ from clinical_platform.domain.ports import LLMProvider
 from clinical_platform.domain.rag import RagResult, SourceCitation
 from clinical_platform.services.retrieval_service import RetrievalService
 
+#for langsmith
+from langsmith import traceable
+
+
 # Exact string — detectable programmatically in tests and eval pipelines
 _NO_KNOWLEDGE_ANSWER = "I don't know based on the available documents."
 
@@ -58,6 +62,8 @@ class RagQueryService:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
+   
+    @traceable(name="rag_query")   ##adding for langsmith tracablity
 
     def query(self, question: str, top_k: int = 3) -> RagResult:
         """Answer *question* using retrieved document chunks.

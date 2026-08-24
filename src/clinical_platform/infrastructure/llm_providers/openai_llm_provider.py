@@ -7,6 +7,8 @@ import openai
 
 from clinical_platform.domain.ports import LLMError
 
+from langsmith import traceable
+
 
 class OpenAILLMProvider:
     def __init__(
@@ -22,6 +24,8 @@ class OpenAILLMProvider:
         if self._client is None:
             self._client = openai.OpenAI(api_key=self._api_key)
         return self._client
+
+    @traceable(name="llm_generate")
 
     def generate(
         self,
