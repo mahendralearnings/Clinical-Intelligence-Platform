@@ -1,8 +1,7 @@
 """
 A simple visual demo UI - calls your existing FastAPI backend, shows
-RAG and Agent results side by side, with the agent's step-by-step
-reasoning displayed visually. This is a demo tool, not part of the
-clean-architecture app itself.
+RAG, Agent, and Crew results, with step-by-step reasoning displayed
+visually. This is a demo tool, not part of the clean-architecture app.
 """
 
 import requests
@@ -39,13 +38,20 @@ if not st.session_state.token:
 headers = {"Authorization": f"Bearer {st.session_state.token}"}
 
 # --- Mode selector ---
-mode = st.radio("Choose mode", ["Plain RAG (single search + answer)", "Agent (multi-step reasoning)"])
+mode = st.radio(
+    "Choose mode",
+    ["Plain RAG (single search + answer)", "Agent (multi-step reasoning)", "Crew (3-agent team)"],
+)
 
 question = st.text_input(
     "Ask a question",
-    value="What is the maximum daily metformin dose, divided evenly across 3 doses?"
-    if mode.startswith("Agent")
-    else "What is the lactic acidosis risk with metformin?",
+    value=(
+        "What is the maximum daily metformin dose, divided evenly across 3 doses?"
+        if mode.startswith("Agent")
+        else "What vitamin deficiency is linked to long-term metformin use?"
+        if mode.startswith("Crew")
+        else "What is the lactic acidosis risk with metformin?"
+    ),
 )
 
 if st.button("Ask", type="primary"):
@@ -64,7 +70,7 @@ if st.button("Ask", type="primary"):
             else:
                 st.error(response.text)
 
-        else:
+        elif mode.startswith("Agent"):
             response = requests.post(
                 f"{API_BASE}/agent/query", json={"question": question}, headers=headers
             )
@@ -75,6 +81,21 @@ if st.button("Ask", type="primary"):
                 for step in data["steps"]:
                     icon = icons.get(step["step_type"], "•")
                     st.markdown(f"{icon} **{step['step_type']}**: {step['content']}")
+                st.subheader("Final Answer")
+                st.success(data["final_answer"])
+            else:
+                st.error(response.text)
+
+        else:  # Crew mode
+            response = requests.post(
+                f"{API_BASE}/crew/query", json={"question": question}, headers=headers
+            )
+            if response.status_code == 200:
+                data = response.json()
+                st.subheader("Team's work, step by step")
+                for item in data["agent_outputs"]:
+                    with st.expander(f"👤 {item['agent_role']}", expanded=True):
+                        st.write(item["output"])
                 st.subheader("Final Answer")
                 st.success(data["final_answer"])
             else:
