@@ -25,6 +25,8 @@ dependencies = [
     "langgraph>=1.2.11",
     "langchain-core>=1.6.0",
     "langchain-openai>=1.6.0",
+    "streamlit>=1.62.0",
+    "requests>=2.34.2",
 ]
 
 [project.optional-dependencies]

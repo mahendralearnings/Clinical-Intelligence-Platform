@@ -11,6 +11,8 @@ from clinical_platform.api.routes import auth as auth_router
 from clinical_platform.api.routes import rag as rag_router
 from clinical_platform.api.routes import retrieval as retrieval_router
 
+from clinical_platform.api.routes import agent
+
 app = FastAPI(
     title="Clinical Intelligence Platform",
     description="Enterprise RAG + Agents platform for pharma/healthcare.",
@@ -25,7 +27,7 @@ app.include_router(auth_router.router)
 app.include_router(retrieval_router.router)
 app.include_router(rag_router.router)
 app.include_router(observability.router)
-
+app.include_router(agent.router)
 # ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------
