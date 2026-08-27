@@ -28,6 +28,7 @@ dependencies = [
     "streamlit>=1.62.0",
     "requests>=2.34.2",
     "crewai",
+    "mcp[cli]>=1.28.1",
 ]
 
 [project.optional-dependencies]

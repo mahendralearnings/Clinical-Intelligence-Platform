@@ -23,6 +23,7 @@ from clinical_platform.domain.ports import (
 )
 from clinical_platform.services.rag_query_service import RagQueryService
 from clinical_platform.services.retrieval_service import RetrievalService
+from clinical_platform.services.guardrail_service import PromptInjectionDetected
 
 router = APIRouter(prefix="/rag", tags=["rag"])
 
@@ -66,6 +67,11 @@ def rag_query(
     """Retrieve relevant chunks and generate a grounded answer via Claude."""
     try:
         result = rag_service.query(question=body.question, top_k=body.top_k)
+    except PromptInjectionDetected as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Your question could not be processed. Please rephrase it as a direct question.",
+        ) from exc
     except (EmbeddingError, LLMError) as exc:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,

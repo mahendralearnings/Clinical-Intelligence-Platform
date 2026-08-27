@@ -20,6 +20,10 @@ from clinical_platform.domain.ports import LLMProvider
 from clinical_platform.domain.rag import RagResult, SourceCitation
 from clinical_platform.services.retrieval_service import RetrievalService
 
+from clinical_platform.services.guardrail_service import check_for_prompt_injection, redact_pii
+
+
+
 #for langsmith
 from langsmith import traceable
 
@@ -76,6 +80,12 @@ class RagQueryService:
             4. Append one line to the JSONL log file.
             5. Return RagResult(answer, sources).
         """
+        
+        # Step 0 — guardrail checks, before anything else
+        check_for_prompt_injection(question)
+        question, _pii_found = redact_pii(question)
+
+     
         # Step 1 — retrieve relevant chunks
         results = self._retrieval.search(
             query=question,
