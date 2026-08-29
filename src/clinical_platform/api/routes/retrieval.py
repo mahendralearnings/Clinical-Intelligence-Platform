@@ -43,6 +43,7 @@ def get_retrieval_service(
     embedder = BedrockEmbeddingProvider(
         region=settings.bedrock_region,
         model_id=settings.embedding_model_id,
+        dimension=settings.embedding_dimension,
     )
     store = JsonVectorStore(store_path=Path(settings.vector_store_path))
     return RetrievalService(embedder=embedder, store=store)

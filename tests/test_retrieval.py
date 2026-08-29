@@ -162,10 +162,10 @@ def test_dimension_mismatch_raises(tmp_path: Path) -> None:
     raise DimensionMismatchError — not a silent wrong answer."""
     store = JsonVectorStore(store_path=tmp_path / "vs.json")
 
-    store.upsert([_make_embedded(_make_chunk(), [0.1] * 1536)])
+    store.upsert([_make_embedded(_make_chunk(), [0.1] * 1024)])
 
     with pytest.raises(DimensionMismatchError, match="dimension"):
-        store.search([0.1] * 768, top_k=1)
+        store.search([0.1] * 512, top_k=1)
 
 
 # ---------------------------------------------------------------------------
